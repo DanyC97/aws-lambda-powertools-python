@@ -14,7 +14,7 @@
       
       
       <link rel="icon" href="../../media/aws-logo-light.svg">
-      <meta name="generator" content="mkdocs-1.2.2, mkdocs-material-7.3.0">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-7.3.6">
     
     
       
@@ -22,7 +22,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.8b42a75e.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.a57b2b03.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.3f5d1f46.min.css">
@@ -34,8 +34,8 @@
       
         
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
-        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,400i,700%7C&display=fallback">
+        <style>:root{--md-text-font-family:"Ubuntu";--md-code-font-family:""}</style>
       
     
     
@@ -496,6 +496,8 @@
       </a>
       
         
+
+
 <nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
@@ -659,6 +661,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#customizing-boto-configuration" class="md-nav__link">
+    Customizing boto configuration
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -680,7 +689,7 @@
   
     <li class="md-nav__item">
       <a href="../batch/" class="md-nav__link">
-        SQS Batch Processing
+        Batch Processing
       </a>
     </li>
   
@@ -785,6 +794,20 @@
 
             
           
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://github.com/aws-cloudformation/custom-resource-helper" target="_blank" class="md-nav__link">
+        CloudFormation Custom Resources
+      </a>
+    </li>
+  
+
+            
+          
         </ul>
       </nav>
     </li>
@@ -803,6 +826,8 @@
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     
+
+
 <nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
@@ -962,6 +987,13 @@
           <li class="md-nav__item">
   <a href="#passing-additional-sdk-arguments" class="md-nav__link">
     Passing additional SDK arguments
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#customizing-boto-configuration" class="md-nav__link">
+    Customizing boto configuration
   </a>
   
 </li>
@@ -1803,6 +1835,58 @@
 </tr>
 </tbody>
 </table>
+<h3 id="customizing-boto-configuration">Customizing boto configuration<a class="headerlink" href="#customizing-boto-configuration" title="Permanent link">&para;</a></h3>
+<p>The <strong><code>config</code></strong> and <strong><code>boto3_session</code></strong> parameters enable you to pass in a custom <a href="https://botocore.amazonaws.com/v1/documentation/api/latest/reference/config.html">botocore config object</a> or a custom <a href="https://boto3.amazonaws.com/v1/documentation/api/latest/reference/core/session.html">boto3 session</a> when constructing any of the built-in provider classes.</p>
+<blockquote>
+<p><strong>Example</strong></p>
+</blockquote>
+<div class="tabbed-set" data-tabs="19:2"><input checked="checked" id="__tabbed_19_1" name="__tabbed_19" type="radio" /><label for="__tabbed_19_1">Custom session</label><div class="tabbed-content">
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities</span> <span class="kn">import</span> <span class="n">parameters</span>
+<span class="hll"><span class="kn">import</span> <span class="nn">boto3</span>
+</span>
+<span class="hll"><span class="n">boto3_session</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+</span><span class="hll"><span class="n">ssm_provider</span> <span class="o">=</span> <span class="n">parameters</span><span class="o">.</span><span class="n">SSMProvider</span><span class="p">(</span><span class="n">boto3_session</span><span class="o">=</span><span class="n">boto3_session</span><span class="p">)</span>
+</span>
+<span class="k">def</span> <span class="nf">handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+    <span class="c1"># Retrieve a single parameter</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="n">ssm_provider</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/my/parameter&quot;</span><span class="p">)</span>
+    <span class="o">...</span>
+</code></pre></div>
+</td></tr></table>
+</div>
+<input id="__tabbed_19_2" name="__tabbed_19" type="radio" /><label for="__tabbed_19_2">Custom config</label><div class="tabbed-content">
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">aws_lambda_powertools.utilities</span> <span class="kn">import</span> <span class="n">parameters</span>
+<span class="hll"><span class="kn">from</span> <span class="nn">botocore.config</span> <span class="kn">import</span> <span class="n">Config</span>
+</span>
+<span class="hll"><span class="n">boto_config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
+</span><span class="hll"><span class="n">ssm_provider</span> <span class="o">=</span> <span class="n">parameters</span><span class="o">.</span><span class="n">SSMProvider</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">boto_config</span><span class="p">)</span>
+</span>
+<span class="k">def</span> <span class="nf">handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+    <span class="c1"># Retrieve a single parameter</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="n">ssm_provider</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/my/parameter&quot;</span><span class="p">)</span>
+    <span class="o">...</span>
+</code></pre></div>
+</td></tr></table>
+</div>
+</div>
                 
                   
                     
@@ -1811,7 +1895,7 @@
 <div class="md-source-date">
   <small>
     
-      Last update: 2021-08-15
+      Last update: 2021-10-01
     
   </small>
 </div>
@@ -1856,13 +1940,13 @@
       
       
         
-        <a href="../batch/" class="md-footer__link md-footer__link--next" aria-label="Next: SQS Batch Processing" rel="next">
+        <a href="../batch/" class="md-footer__link md-footer__link--next" aria-label="Next: Batch Processing" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              SQS Batch Processing
+              Batch Processing
             </div>
           </div>
           <div class="md-footer__button md-icon">
@@ -1897,10 +1981,10 @@
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.sections", "navigation.expand", "navigation.top"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../assets/javascripts/workers/search.f8263e09.min.js", "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.sections", "navigation.expand", "navigation.top", "navigation.instant"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../assets/javascripts/workers/search.fcfe8b6d.min.js", "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.4fc53ad4.min.js"></script>
+      <script src="../../assets/javascripts/bundle.b1047164.min.js"></script>
       
         <script src="../../javascript/aws-amplify.min.js"></script>
       
